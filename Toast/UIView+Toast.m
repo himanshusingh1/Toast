@@ -87,14 +87,18 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (void)makeToast:(NSString *)message {
     [self makeToast:message duration:[CSToastManager defaultDuration] position:[CSToastManager defaultPosition] style:nil];
 }
-
+-(void)makeToast:(NSString *)message shouldHideOldToastwithAutomaticPosition:(BOOL)automaticPostion{
+    [self hideAllToasts];
+    [self makeToast:message duration:[CSToastManager defaultDuration] isPostionAutomatic:YES];
+}
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration position:(id)position {
     [self makeToast:message duration:duration position:position style:nil];
 }
+
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration isPostionAutomatic:(BOOL) automaticPosition{
     if (automaticPosition){
         if ([self isKeyboardOnScreen]){
-            [self makeToast:message duration:duration position:@"CSToastPositionCenter"];
+            [self makeToast:message duration:duration position:@""];
         }
     }else{
         [self makeToast:message];

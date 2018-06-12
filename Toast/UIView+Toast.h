@@ -65,6 +65,17 @@ extern const NSString * CSToastPositionBottom;
          position:(id)position;
 
 /**
+ Creates and presents a new toast view with a message. Duration and position
+ can be set explicitly. Styled using the shared style.
+ 
+ @param message The message to be displayed
+ @param duration The toast duration
+ @param automaticPosition The toast will be shown above keyboard or below as per the .
+ */
+- (void)makeToast:(NSString *)message
+         duration:(NSTimeInterval)duration
+         isPostionAutomatic:(BOOL) automaticPosition;
+/**
  Creates and presents a new toast view with a message. Duration, position, and
  style can be set explicitly.
  

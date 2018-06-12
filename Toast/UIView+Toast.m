@@ -66,7 +66,24 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 @implementation UIView (Toast)
 
 #pragma mark - Make Toast Methods
-
+- (BOOL) isKeyboardOnScreen
+{
+    BOOL isKeyboardShown = NO;
+    
+    NSArray *windows = [UIApplication sharedApplication].windows;
+    if (windows.count > 1) {
+        NSArray *wSubviews =  [windows[1]  subviews];
+        if (wSubviews.count) {
+            CGRect keyboardFrame = [wSubviews[0] frame];
+            CGRect screenFrame = [windows[1] frame];
+            if (keyboardFrame.origin.y+keyboardFrame.size.height == screenFrame.size.height) {
+                isKeyboardShown = YES;
+            }
+        }
+    }
+    
+    return isKeyboardShown;
+}
 - (void)makeToast:(NSString *)message {
     [self makeToast:message duration:[CSToastManager defaultDuration] position:[CSToastManager defaultPosition] style:nil];
 }
@@ -74,7 +91,15 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration position:(id)position {
     [self makeToast:message duration:duration position:position style:nil];
 }
-
+- (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration isPostionAutomatic:(BOOL) automaticPosition{
+    if (automaticPosition){
+        if ([self isKeyboardOnScreen]){
+            [self makeToast:message duration:duration position:@"CSToastPositionCenter"];
+        }
+    }else{
+        [self makeToast:message];
+    }
+}
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration position:(id)position style:(CSToastStyle *)style {
     UIView *toast = [self toastViewForMessage:message title:nil image:nil style:style];
     [self showToast:toast duration:duration position:position completion:nil];
@@ -145,6 +170,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (void)clearToastQueue {
     [[self cs_toastQueue] removeAllObjects];
 }
+
 
 #pragma mark - Private Show/Hide Methods
 
@@ -582,5 +608,6 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 + (id)defaultPosition {
     return [[self sharedManager] defaultPosition];
 }
+
 
 @end

@@ -46,7 +46,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 @interface UIView (ToastPrivate)
 
 /**
- These private methods are being prefixed with "cs_" to reduce the likelihood of non-obvious 
+ These private methods are being prefixed with "cs_" to reduce the likelihood of non-obvious
  naming conflicts with other UIView methods.
  
  @discussion Should the public API also use the cs_ prefix? Technically it should, but it
@@ -98,7 +98,10 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (void)makeToast:(NSString *)message duration:(NSTimeInterval)duration isPostionAutomatic:(BOOL) automaticPosition{
     if (automaticPosition){
         if ([self isKeyboardOnScreen]){
-            [self makeToast:message duration:duration position:@""];
+            id position = CSToastPositionCenter;
+            [self makeToast:message duration:duration position:position];
+        }else{
+            [self makeToast:message];
         }
     }else{
         [self makeToast:message];
@@ -208,7 +211,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 - (void)cs_hideToast:(UIView *)toast {
     [self cs_hideToast:toast fromTap:NO];
 }
-    
+
 - (void)cs_hideToast:(UIView *)toast fromTap:(BOOL)fromTap {
     NSTimer *timer = (NSTimer *)objc_getAssociatedObject(toast, &CSToastTimerKey);
     [timer invalidate];
@@ -540,7 +543,7 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
 @property (assign, nonatomic, getter=isQueueEnabled) BOOL queueEnabled;
 @property (assign, nonatomic) NSTimeInterval defaultDuration;
 @property (strong, nonatomic) id defaultPosition;
-
+@property (strong, nonatomic) id middlePosition;
 @end
 
 @implementation CSToastManager

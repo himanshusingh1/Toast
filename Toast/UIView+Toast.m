@@ -71,8 +71,9 @@ static const NSString * CSToastQueueKey             = @"CSToastQueueKey";
     BOOL isKeyboardShown = NO;
     
     NSArray *windows = [UIApplication sharedApplication].windows;
-    if (windows.count > 1) {
-        NSArray *wSubviews =  [windows[1]  subviews];
+    if (windows.count > 2) {
+        
+        NSArray *wSubviews =  [windows[[windows count] - 1]  subviews];
         if (wSubviews.count) {
             CGRect keyboardFrame = [wSubviews[0] frame];
             CGRect screenFrame = [windows[1] frame];
